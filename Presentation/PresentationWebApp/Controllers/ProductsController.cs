@@ -29,6 +29,17 @@ namespace PresentationWebApp.Controllers
             return View(list);
         }
 
+        public IActionResult CategorySearch(int category) //Using a Form, and the select list must have name attribute = category
+        {
+
+            //Create a method to filter the list using the category
+            var list = _productsService.GetProducts(category);
+
+
+            return RedirectToAction("Index", list);
+            
+        }
+
         [HttpPost]
         public IActionResult Search(string keyword) { //Using a form, and the select list must have name attribute = category
             var list = _productsService.GetProducts(keyword).ToList();
