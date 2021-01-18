@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Text;
 
-namespace ShoppingCart.Domain.Models
+namespace ShoppingCart.Application.ViewModels
 {
-    public class Order
+    public class OrderViewModel
     {
-        [Key]
         public Guid Id { get; set; }
 
         public DateTime DatePlaced { get; set; }
 
         public string UserEmail { get; set; }
-
 
     }
 }

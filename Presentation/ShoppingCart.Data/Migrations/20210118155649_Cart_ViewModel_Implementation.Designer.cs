@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ShoppingCart.Data.Context;
 
 namespace ShoppingCart.Data.Migrations
 {
     [DbContext(typeof(ShoppingCartDbContext))]
-    partial class ShoppingCartDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210118155649_Cart_ViewModel_Implementation")]
+    partial class Cart_ViewModel_Implementation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -103,10 +105,16 @@ namespace ShoppingCart.Data.Migrations
                     b.Property<Guid>("OrderFK")
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<double>("Price")
                         .HasColumnType("float");
 
                     b.Property<Guid>("ProductFK")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("ProductID")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<int>("Quantity")
@@ -114,9 +122,9 @@ namespace ShoppingCart.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OrderFK");
+                    b.HasIndex("OrderId");
 
-                    b.HasIndex("ProductFK");
+                    b.HasIndex("ProductID");
 
                     b.ToTable("OrderDetails");
                 });
@@ -170,15 +178,11 @@ namespace ShoppingCart.Data.Migrations
                 {
                     b.HasOne("ShoppingCart.Domain.Models.Order", "Order")
                         .WithMany()
-                        .HasForeignKey("OrderFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("OrderId");
 
                     b.HasOne("ShoppingCart.Domain.Models.Product", "Product")
                         .WithMany()
-                        .HasForeignKey("ProductFK")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ProductID");
                 });
 
             modelBuilder.Entity("ShoppingCart.Domain.Models.Product", b =>

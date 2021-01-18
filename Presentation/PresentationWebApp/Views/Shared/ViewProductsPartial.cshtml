@@ -8,12 +8,29 @@
             <div class="card-body">
                 <h5 class="card-title text-truncate">@p.Name</h5>
                 <p class="card-text">&euro;@p.Price</p>
-                <a href="/Products/Details?id=@p.Id" class="btn btn-primary">View Specification</a>
 
-                @if (User.IsInRole("Admin"))
+
+                @if (ViewData["Title"] == "Index")
                 {
-                    <a href="/Products/Delete?id=@p.Id" class="btn btn-danger">Delete</a>
+                    <a href="/Products/Details?id=@p.Id" class="btn btn-primary">View Specification</a>
+
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a href="/Products/Delete?id=@p.Id" class="btn btn-danger">Delete</a>
+                    }
+
+                    //Add quantity form
+                    //Add to card button
+                    <a href="/Products/Delete?id=@p.Id" class="btn btn-danger">Add to Cart</a>
                 }
+
+                @if (ViewData["Title"] == "Cart")
+                {
+                    //Remove from Cart
+                    <a href="/Products/Delete?id=@p.Id" class="btn btn-danger">Remove from Cart</a>
+                }
+
+
 
             </div>
         </div>
