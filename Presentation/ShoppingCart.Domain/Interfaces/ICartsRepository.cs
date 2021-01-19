@@ -14,6 +14,6 @@ namespace ShoppingCart.Domain.Interfaces
 
         void DeleteFromCart(Cart cart);
 
-        int AddProductToCart(string email, Product product, int quantity);
+        int AddProductToCart(Cart newCart);
     }
 }

@@ -1,5 +1,6 @@
 ﻿@model IEnumerable<ShoppingCart.Application.ViewModels.ProductViewModel>
 
+
 @foreach (var p in Model)
 {
     <div class="col-4 mt-5">
@@ -19,9 +20,19 @@
                         <a href="/Products/Delete?id=@p.Id" class="btn btn-danger">Delete</a>
                     }
 
-                    //Add quantity form
-                    //Add to card button
-                    <a href="/Products/Delete?id=@p.Id" class="btn btn-danger">Add to Cart</a>
+                    
+                    <form asp-controller="Carts" asp-action="AddToCart">
+                        <div class="row mt-2">
+                            <div class="col-4">
+                                <input type="number" class="form-control" placeholder="Quantity" min="1" value="1" name="quantity" id="quantity" />
+                                <input type="hidden" name="productId" id="productId" value="@p.Id" />
+                            </div>
+                            <div class="col-8">
+                                <input type="submit" value="Add To Cart" class="btn btn-block btn-success" />
+                            </div>
+                        </div>
+                    </form>
+                    
                 }
 
                 @if (ViewData["Title"] == "Cart")

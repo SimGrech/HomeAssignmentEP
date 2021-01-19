@@ -27,8 +27,11 @@ namespace ShoppingCart.Application.Services
 
         public void AddCartEntry(CartViewModel cartEntry)
         {
-            var myCartEntry = _mapper.Map<Cart>(cartEntry);            
-            _cartsRepo.AddProductToCart(myCartEntry.Email, myCartEntry.Product, myCartEntry.Quantity);
+            var myCartEntry = _mapper.Map<Cart>(cartEntry);
+            //This is done to avoid an error from the automapper, which is trying to insert a product
+            myCartEntry.Product_FK = myCartEntry.Product.ID;
+            myCartEntry.Product = null;
+            _cartsRepo.AddProductToCart(myCartEntry);
         }
 
         public CartViewModel GetCartEntry(int id)
@@ -40,11 +43,11 @@ namespace ShoppingCart.Application.Services
                 return myCartEntry;
             
         }
-
+        
         public void DeleteCartEntry(int id)
         {
             var cartEntryToDelete = _cartsRepo.GetCartEntry(id);
-
+            
             if (cartEntryToDelete != null)
             {
                 _cartsRepo.DeleteFromCart(cartEntryToDelete);

@@ -18,17 +18,13 @@ namespace ShoppingCart.Data.Repositories
             _context = context;
         }
 
-        public int AddProductToCart(string email, Product product, int quantity)
+        public int AddProductToCart(Cart newCartEntry)
         {
             //Creates a new cart entry to add under the current user
-            Cart newEntry = new Cart();
-            newEntry.Email = email;
-            newEntry.Product = product;
-            newEntry.Quantity = quantity;
-
-            _context.Carts.Add(newEntry);
+            
+            _context.Carts.Add(newCartEntry);
             _context.SaveChanges(); //Saves permanently into the database
-            return newEntry.Id;
+            return newCartEntry.Id;
         }
 
         public void DeleteFromCart(Cart cartEntry)

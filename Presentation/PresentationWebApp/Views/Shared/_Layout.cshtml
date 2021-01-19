@@ -1,4 +1,8 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> SignInManager
+@inject UserManager<IdentityUser> UserManager
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -31,6 +35,11 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products List</a>
                         </li>
+                        @if (SignInManager.IsSignedIn(User)) { 
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Carts" asp-action="Index" asp-route-email=@User.Identity.Name>Cart</a>
+                            </li>
+                        }
                     </ul>
                 </div>
             </div>
@@ -38,7 +47,7 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
-            
+
             @if (TempData["feedback"] != null)
             {
                 <div class="alert alert-primary" role="alert">
