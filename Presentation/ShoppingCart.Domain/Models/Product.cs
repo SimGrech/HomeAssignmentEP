@@ -33,6 +33,7 @@ namespace ShoppingCart.Domain.Models
 
         public string ImageUrl { get; set; }
 
+        [DefaultValue(0)]
         public int Stock { get; set; }
 
         [DefaultValue(false)]

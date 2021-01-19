@@ -26,6 +26,13 @@
                 <textarea asp-for="Description" class="form-control" cols="3">Description</textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+            <!--
+            <div class="form-group">
+                <label asp-for="Stock" class="control-label"></label>
+                <input asp-for="Stock" class="form-control" />
+                <span asp-validation-for="Stock" class="text-danger"></span>
+            </div>
+            -->
             <div class="form-group">
                 <label class="control-label">Image Url</label>
                 <input asp-for="ImageUrl" class="form-control" />
@@ -38,7 +45,8 @@
                 <label class="control-label">Category</label>
                 <select asp-for="Category.Id" class="form-control">
                     <!--We need to populate this dropdown with a list of categories we should fetch from the db-->
-                    @foreach(var category in ViewBag.Categories){
+                    @foreach (var category in ViewBag.Categories)
+                    {
                         <option value="@category.Id">@category.Name</option>
                     }
                 </select>
