@@ -51,6 +51,8 @@ namespace ShoppingCart.Application.Services
         public ProductViewModel GetProduct(Guid id)
         {
             var myProduct = _productsRepo.GetProduct(id);
+            ProductViewModel myModel = _mapper.Map<ProductViewModel>(myProduct);
+            /*
             ProductViewModel myModel = new ProductViewModel();
             myModel.ImageUrl = myProduct.ImageUrl;
             myModel.Name = myProduct.Name;
@@ -60,6 +62,7 @@ namespace ShoppingCart.Application.Services
                 Id = myProduct.Category.Id,
                 Name = myProduct.Category.Name
             };
+            */
             return myModel;
         }
 
@@ -105,7 +108,9 @@ namespace ShoppingCart.Application.Services
 
         public IQueryable<ProductViewModel> GetProducts(int category)
         {
-            var list = from p in _productsRepo.GetProducts().Where(x => x.Category.Id == category)
+            var products = _productsRepo.GetProducts().Where(x => x.Category.Id == category)
+            .ProjectTo<ProductViewModel>(_mapper.ConfigurationProvider);
+                       /*
                        select new ProductViewModel()
                        {
                            Id = p.ID,
@@ -115,7 +120,8 @@ namespace ShoppingCart.Application.Services
                            Category = new CategoryViewModel() { Id = p.Category.Id, Name = p.Category.Name },
                            ImageUrl = p.ImageUrl
                        };
-            return list;
+                      */
+            return products;
         }
 
         public void DeleteProduct(Guid id)

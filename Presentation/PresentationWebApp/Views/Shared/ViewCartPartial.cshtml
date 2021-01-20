@@ -1,20 +1,28 @@
 ﻿@model IEnumerable<ShoppingCart.Application.ViewModels.CartViewModel>
 
-@foreach (var c in Model)
-{
-    <div class="col-4 mt-5">
-        <div class="card">
-            <img src="@c.Product.ImageUrl" class="card-img-top img-thumbnail" style="height:300px;" alt="...">
-            <div class="card-body">
-                <h5 class="card-title text-truncate">@c.Product.Name</h5>
-                <p class="card-text">Quantity: @c.Quantity</p>
-                
-                
-                <a href="/Products/Details?id=@c.Product.Id" class="btn btn-primary">View Specification</a>
+@{double total = 0;}
+<div class="row row-cols-3">
+    @foreach (var c in Model)
+    {
+        <div class="col-4 mt-5">
+            <div class="card">
+                <img src="@c.Product.ImageUrl" class="card-img-top img-thumbnail" style="height:300px;" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title text-truncate">@c.Product.Name</h5>
+                    <p class="card-text">Quantity: @c.Quantity</p>
+                    @{total += (c.Product.Price * c.Quantity); }
 
-                <a href="/Carts/RemoveFromCart?id=@c.Id" class="btn btn-danger">Remove from Cart</a>
-                
+                    <a href="/Products/Details?id=@c.Product.Id" class="btn btn-dark mb-2">View Specification</a>
+
+                    <a href="/Carts/RemoveFromCart?id=@c.Id" class="btn btn-warning">Remove from Cart</a>
+
+                </div>
             </div>
         </div>
-    </div>
+    }
+</div>
+
+@if (total > 0)
+{
+<h4 class="text-center">Total: &euro; @total</h4>
 }

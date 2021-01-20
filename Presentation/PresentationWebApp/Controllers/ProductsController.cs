@@ -25,25 +25,49 @@ namespace PresentationWebApp.Controllers
 
         public IActionResult Index() {
             var list = _productsService.GetProducts();
+            
+            //Same method from create used
+            //Fetch a list of categories
+            var listOfCategories = _categoriesService.GetCategories();
+
+            //We pass the categories to the page
+            ViewBag.Categories = listOfCategories;
+
+            
 
             return View(list);
         }
 
+        [HttpPost]
         public IActionResult CategorySearch(int category) //Using a Form, and the select list must have name attribute = category
         {
 
             //Create a method to filter the list using the category
-            var list = _productsService.GetProducts(category);
+            var list = _productsService.GetProducts(category).ToList();
+
+            //Same method from create used
+            //Fetch a list of categories
+            var listOfCategories = _categoriesService.GetCategories();
+
+            //We pass the categories to the page
+            ViewBag.Categories = listOfCategories;
 
 
-            return RedirectToAction("Index", list);
+            return View("Index", list);
             
         }
 
         [HttpPost]
         public IActionResult Search(string keyword) { //Using a form, and the select list must have name attribute = category
             var list = _productsService.GetProducts(keyword).ToList();
-            
+
+            //Same method from create used
+            //Fetch a list of categories
+            var listOfCategories = _categoriesService.GetCategories();
+
+            //We pass the categories to the page
+            ViewBag.Categories = listOfCategories;
+
             return View("Index", list);
         }
 

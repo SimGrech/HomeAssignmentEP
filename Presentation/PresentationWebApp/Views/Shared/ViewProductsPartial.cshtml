@@ -13,11 +13,11 @@
 
                 @if (ViewData["Title"] == "Index")
                 {
-                    <a href="/Products/Details?id=@p.Id" class="btn btn-primary">View Specification</a>
+                    <a href="/Products/Details?id=@p.Id" class="btn btn-dark">View Specification</a>
 
                     @if (User.IsInRole("Admin"))
                     {
-                        <a href="/Products/Delete?id=@p.Id" class="btn btn-danger">Delete</a>
+                        <a href="/Products/Delete?id=@p.Id" class="btn btn-warning">Delete</a>
                     }
 
                     
