@@ -31,6 +31,10 @@ namespace PresentationWebApp.Controllers
         [Authorize(Roles = "Admin, User")]
         public IActionResult Index(string email)
         {
+            //check made in case the direct link is used 
+            if (email == null) {
+                email = User.Identity.Name;
+            }
             var currentPersonCart = _cartsService.GetCarts(email);
             var list = _productsService.GetProducts();
 
@@ -61,14 +65,20 @@ namespace PresentationWebApp.Controllers
 
         }
 
-        
+        //Method created to redirect user if he tries to add an item to checkout without being logged in
+        [Authorize(Roles = "Admin, User")]
+        public IActionResult AddToCart()
+        {
+            return RedirectToAction("Index", "Products");
+        }
+
         [HttpPost]
         [Authorize(Roles = "Admin, User")]
-        public IActionResult AddToCart() {
+        public IActionResult AddToCart(string quantity, string productId) {
             //Here details input by the user will be 
             try
             {
-                string quantity, productId, email;
+                string email;
                 quantity = Request.Form["quantity"];
                 productId = Request.Form["productId"];
                 //Gets the current user's email (User should be logged in)

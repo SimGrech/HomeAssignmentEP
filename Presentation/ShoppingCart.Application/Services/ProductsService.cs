@@ -100,7 +100,7 @@ namespace ShoppingCart.Application.Services
 
         public IQueryable<ProductViewModel> GetProducts(string keyword)
         {
-            var products = _productsRepo.GetProducts().Where(x=>x.Description.Contains(keyword) || x.Name.Contains(keyword))
+            var products = _productsRepo.GetProducts().Where(x=>x.Description.Contains(keyword) || x.Name.Contains(keyword) && x.Disable == false)
                 .ProjectTo<ProductViewModel>(_mapper.ConfigurationProvider);
 
             return products;
@@ -108,7 +108,7 @@ namespace ShoppingCart.Application.Services
 
         public IQueryable<ProductViewModel> GetProducts(int category)
         {
-            var products = _productsRepo.GetProducts().Where(x => x.Category.Id == category)
+            var products = _productsRepo.GetProducts().Where(x => x.Category.Id == category && x.Disable == false)
             .ProjectTo<ProductViewModel>(_mapper.ConfigurationProvider);
                        /*
                        select new ProductViewModel()
@@ -136,7 +136,12 @@ namespace ShoppingCart.Application.Services
 
         public void DisableProduct(Guid id)
         {
-            throw new NotImplementedException();
+            var pToHide = _productsRepo.GetProduct(id);
+
+            if (pToHide != null) {
+                _productsRepo.DisableProduct(id);
+            }
+            
         }
     }
 }

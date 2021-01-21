@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using ShoppingCart.Application.Interfaces;
 using ShoppingCart.Application.ViewModels;
+using X.PagedList;
 
 namespace PresentationWebApp.Controllers
 {
@@ -23,6 +24,8 @@ namespace PresentationWebApp.Controllers
             _env = env;
         }
 
+
+        /* Old method for index used, changed because of pagination
         public IActionResult Index() {
             var list = _productsService.GetProducts();
             
@@ -37,13 +40,39 @@ namespace PresentationWebApp.Controllers
 
             return View(list);
         }
+        */
+
+        //Video example used for pagination https://www.youtube.com/watch?v=vnxN_zBisIo&ab_channel=ErcanEker
+        public IActionResult Index(int? page) {
+
+            var pageNumber = page ?? 1; //If page parameter is null, set to 1
+            
+            
+            int pageSize = 10;
+            //Paginated list
+            var list = _productsService.GetProducts().ToPagedList(pageNumber, pageSize);
+
+
+            //Same method from create used
+            //Fetch a list of categories
+            var listOfCategories = _categoriesService.GetCategories();
+
+            //We pass the categories to the page
+            ViewBag.Categories = listOfCategories;
+
+            return View(list);
+        }
 
         [HttpPost]
         public IActionResult CategorySearch(int category) //Using a Form, and the select list must have name attribute = category
         {
 
             //Create a method to filter the list using the category
-            var list = _productsService.GetProducts(category).ToList();
+            //var list = _productsService.GetProducts(category).ToList();
+            //Changing ToList to ToPagedList to suit the new index method, 10 is being defined in a hard coded manner but it could be done by setting a global variable
+            var list = _productsService.GetProducts(category).ToPagedList(1, 10);
+
+
 
             //Same method from create used
             //Fetch a list of categories
@@ -59,7 +88,10 @@ namespace PresentationWebApp.Controllers
 
         [HttpPost]
         public IActionResult Search(string keyword) { //Using a form, and the select list must have name attribute = category
-            var list = _productsService.GetProducts(keyword).ToList();
+            //var list = _productsService.GetProducts(keyword).ToList();
+            //Changing ToList to ToPagedList to suit the new index method, 10 is being defined in a hard coded manner but it could be done by setting a global variable
+            var list = _productsService.GetProducts(keyword).ToPagedList(1, 10);
+
 
             //Same method from create used
             //Fetch a list of categories
@@ -75,6 +107,12 @@ namespace PresentationWebApp.Controllers
             var p = _productsService.GetProduct(id);
 
             return View(p);
+        }
+
+        public IActionResult Hide(Guid id) {
+            _productsService.DisableProduct(id);
+
+            return RedirectToAction("Index");
         }
 
         //The engine will load a page with empty fields

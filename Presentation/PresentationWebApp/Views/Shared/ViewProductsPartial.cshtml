@@ -13,14 +13,20 @@
 
                 @if (ViewData["Title"] == "Index")
                 {
-                    <a href="/Products/Details?id=@p.Id" class="btn btn-dark">View Specification</a>
+
 
                     @if (User.IsInRole("Admin"))
                     {
-                        <a href="/Products/Delete?id=@p.Id" class="btn btn-warning">Delete</a>
+                        <a href="/Products/Details?id=@p.Id" class="btn btn-dark">View Specification</a>
+                        <a href="/Products/Delete?id=@p.Id" class="btn btn-danger">Delete</a>
+                        <a href="/Products/Hide?id=@p.Id" class="btn btn-secondary">Hide</a>
+                    }
+                    else
+                    {
+                        <a href="/Products/Details?id=@p.Id" class="btn btn-dark btn-block">View Specification</a>
                     }
 
-                    
+
                     <form method="post" asp-controller="Carts" asp-action="AddToCart">
                         <div class="row mt-2">
                             <div class="col-4">
@@ -28,11 +34,11 @@
                                 <input type="hidden" name="productId" id="productId" value="@p.Id" />
                             </div>
                             <div class="col-8">
-                                <input type="submit" value="Add To Cart" class="btn btn-block btn-success" />
+                                <input type="submit" value="Add To Cart" class="btn btn-block btn-warning" />
                             </div>
                         </div>
                     </form>
-                    
+
                 }
 
                 @if (ViewData["Title"] == "Cart")

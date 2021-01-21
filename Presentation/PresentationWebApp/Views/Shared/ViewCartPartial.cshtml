@@ -12,9 +12,9 @@
                     <p class="card-text">Quantity: @c.Quantity</p>
                     @{total += (c.Product.Price * c.Quantity); }
 
-                    <a href="/Products/Details?id=@c.Product.Id" class="btn btn-dark mb-2">View Specification</a>
+                    <a href="/Products/Details?id=@c.Product.Id" class="btn btn-dark btn-block mb-2">View Specification</a>
 
-                    <a href="/Carts/RemoveFromCart?id=@c.Id" class="btn btn-warning">Remove from Cart</a>
+                    <a href="/Carts/RemoveFromCart?id=@c.Id" class="btn btn-warning btn-block">Remove from Cart</a>
 
                 </div>
             </div>
