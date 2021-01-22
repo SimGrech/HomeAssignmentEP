@@ -21,11 +21,12 @@ namespace PresentationWebApp.Controllers
         private readonly ILogger<CartsController> _logger;
         private IHostingEnvironment _env;
 
-        public CartsController(ICartsService cartsService, IOrdersService ordersService, IProductsService productsService, IHostingEnvironment env)
+        public CartsController(ICartsService cartsService, IOrdersService ordersService, IProductsService productsService, IHostingEnvironment env, ILogger<CartsController> logger)
         {
             _cartsService = cartsService;
             _ordersService = ordersService;
             _productsService = productsService;
+            _logger = logger;
             _env = env;
         }
 
