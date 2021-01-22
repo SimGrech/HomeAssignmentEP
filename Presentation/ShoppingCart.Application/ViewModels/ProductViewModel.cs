@@ -21,10 +21,11 @@ namespace ShoppingCart.Application.ViewModels
 
         [Required(ErrorMessage = "Stock is required")]
         [Range(typeof(int),"0", "99999", ErrorMessage = "{0} must be between {1} and {2}")]
-        public int Quantity { get; set; }
+        public int Stock { get; set; }
 
         public CategoryViewModel Category { get; set; }
 
+        [Required(ErrorMessage = "Image is required")]
         public string ImageUrl { get; set; }
     }
 }

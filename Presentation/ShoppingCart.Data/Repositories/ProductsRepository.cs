@@ -45,6 +45,14 @@ namespace ShoppingCart.Data.Repositories
             return _context.Products.SingleOrDefault(x => x.ID == id);
         }
 
+        public void EditProductQuantity(Product pToEdit, int quantityOrdered) {
+            pToEdit.Stock = pToEdit.Stock - quantityOrdered;
+            pToEdit.CategoryId = pToEdit.Category.Id;
+            pToEdit.Category = null;
+            //var p = GetProduct(pToEdit.ID);
+                _context.Update(pToEdit);
+        }
+
         public IQueryable<Product> GetProducts()
         {
             return _context.Products.Where(x => x.Disable == false);

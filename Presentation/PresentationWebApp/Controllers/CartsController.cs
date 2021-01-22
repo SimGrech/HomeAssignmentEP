@@ -140,10 +140,16 @@ namespace PresentationWebApp.Controllers
         [Authorize(Roles = "Admin, User")]
         public IActionResult Checkout() {
             //Uses the email to process the user's order taken from User.Identity.Name
+            try
+            {
+                _ordersService.Checkout(User.Identity.Name);
+                TempData["feedback"] = "Checkout Done";
+            }
+            catch(Exception e)
+            {
+                TempData["warning"] = e.Message;
+            }
 
-            _ordersService.Checkout(User.Identity.Name);
-
-            TempData["feedback"] = "Checkout Done";
             return RedirectToAction("Index", "Products");
         }
 

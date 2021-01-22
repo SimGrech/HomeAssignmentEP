@@ -124,6 +124,17 @@ namespace ShoppingCart.Application.Services
             return products;
         }
 
+        public void EditProductQuantity(Guid id, int quantityOrdered)
+        {
+            var pToEdit = _productsRepo.GetProduct(id);
+
+            if (pToEdit != null)
+            {
+                _productsRepo.EditProductQuantity(pToEdit, quantityOrdered);
+            }
+
+        }
+
         public void DeleteProduct(Guid id)
         {
             var pToDelete = _productsRepo.GetProduct(id);

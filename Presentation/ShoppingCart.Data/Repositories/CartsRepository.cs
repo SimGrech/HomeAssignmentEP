@@ -29,6 +29,8 @@ namespace ShoppingCart.Data.Repositories
 
         public void DeleteFromCart(Cart cartEntry)
         {
+            cartEntry.Product_FK = cartEntry.Product.ID;
+            cartEntry.Product = null;
             _context.Carts.Remove(cartEntry);
 
             _context.SaveChanges();

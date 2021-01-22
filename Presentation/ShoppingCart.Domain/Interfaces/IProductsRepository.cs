@@ -14,6 +14,8 @@ namespace ShoppingCart.Domain.Interfaces
 
         void DeleteProduct(Product p);
 
+        void EditProductQuantity(Product p, int quantityOrdered);
+
         Guid AddProduct(Product p);
 
         void DisableProduct(Guid id);

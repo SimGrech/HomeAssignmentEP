@@ -15,12 +15,14 @@ namespace ShoppingCart.Application.Services
     {
         private ICartsRepository _cartsRepo;
         private IOrdersRepository _orderRepo;
+        private IProductsRepository _productsRepo;
         private IMapper _mapper;
 
-        public OrdersService(ICartsRepository cartsRepository, IOrdersRepository ordersRepository, IMapper mapper)
+        public OrdersService(ICartsRepository cartsRepository, IOrdersRepository ordersRepository, IProductsRepository productsRepository, IMapper mapper)
         {
             _cartsRepo = cartsRepository;
             _orderRepo = ordersRepository;
+            _productsRepo = productsRepository;
             _mapper = mapper;
         }
 
@@ -40,7 +42,9 @@ namespace ShoppingCart.Application.Services
             //2. loop within the list of products to check qty from the stock
             //Stock not showing up on the intellisense so I can't test with it
             foreach (var cart in cartEntries){
-                //if(cart.Product.Stock < cart.Quantity){break;}
+                if(cart.Product.Stock < cart.Quantity){
+                    throw new Exception("Not enough stock for product "+ cart.Product.Name);
+                }
                 //if you find a product with qty > stock - throw new exception not enough stock
             }
 
@@ -48,7 +52,7 @@ namespace ShoppingCart.Application.Services
             Guid orderId = Guid.NewGuid();
             Order newOrder = new Order();
             newOrder.Id = orderId;
-            newOrder.DatePlaced = DateTime.Today;
+            newOrder.DatePlaced = DateTime.Now;
             newOrder.UserEmail = email;
             //Contineu setting up other properties
 
@@ -60,27 +64,31 @@ namespace ShoppingCart.Application.Services
             //Start of loop
             foreach (var cart in cartEntries)
             {
+
+                //4.1
+                //deduct qty from stock
+                _productsRepo.EditProductQuantity(_mapper.Map<Product>(cart.Product), cart.Quantity);
+
+                //Create a new OrderDetail
                 OrderDetail newOrderDetail = new OrderDetail();
                 newOrderDetail.OrderFK = orderId;
                 newOrderDetail.ProductFK = cart.Product.Id;
                 newOrderDetail.Price = (cart.Product.Price);
                 newOrderDetail.Quantity = (cart.Quantity);
-                //4.1
-                //deduct qty from stock
-                //detail.ProductFK = 
 
                 //4.2 Loop Call the add orderDetail from inside the IOrderDetailsRepository (this can be merged with step 4)
                 //Might need to comment for testing
                 _orderRepo.AddOrderDetail(newOrderDetail);
-
                 //end of loop
             }
-            cartEntries = null;
-            IList<Cart> cartEntriesToDelete = _cartsRepo.GetCartEntries(email).ToList<Cart>();
-            //Remove Cart Entry
-            foreach (var cart in cartEntriesToDelete)
+
+            //cartEntries = null;
+            //IList<Cart> cartEntriesToDelete = _cartsRepo.GetCartEntries(email).ToList<Cart>();
+            //Remove Cart Entries
+            foreach (var cart in cartEntries)
             {
-                _cartsRepo.DeleteFromCart(cart);
+                Cart cartToDelete = _mapper.Map<Cart>(cart);
+                _cartsRepo.DeleteFromCart(cartToDelete);
             }
             //throw new NotImplementedException();
         }

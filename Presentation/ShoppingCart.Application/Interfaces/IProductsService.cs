@@ -18,6 +18,8 @@ namespace ShoppingCart.Application.Interfaces
 
         void AddProduct(ProductViewModel product);
 
+        void EditProductQuantity(Guid id, int quantityOrdered);
+
         void DeleteProduct(Guid id);
 
         void DisableProduct(Guid id);
