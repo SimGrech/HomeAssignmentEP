@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ShoppingCart.Application.Interfaces;
 using ShoppingCart.Application.ViewModels;
 
@@ -17,6 +18,7 @@ namespace PresentationWebApp.Controllers
         private readonly ICartsService _cartsService;
         private readonly IOrdersService _ordersService;
         private readonly IProductsService _productsService;
+        private readonly ILogger<CartsController> _logger;
         private IHostingEnvironment _env;
 
         public CartsController(ICartsService cartsService, IOrdersService ordersService, IProductsService productsService, IHostingEnvironment env)
@@ -48,13 +50,14 @@ namespace PresentationWebApp.Controllers
             try
             {
                 _cartsService.DeleteCartEntry(id);
-                TempData["feedback"] = "Product was deleted";
+                TempData["feedback"] = "Product Removed from Cart";
             }
 
             catch (Exception ex)
             {
-                //Log your error
-                TempData["warning"] = "Product was not deleted"; //Change from ViewData to TempData
+                _logger.LogError(ex.Message);
+                TempData["warning"] = "Error with removing from cart, sorry for the inconvenience!";
+                return RedirectToAction("Error", "Home");
             }
 
             //Using User.Identity to get the current logged email, this should always work as the method is restricted to users with Admin or basic roles (meaning they have to be logged in)
@@ -124,14 +127,15 @@ namespace PresentationWebApp.Controllers
 
                     _cartsService.AddCartEntry(cartData);
                     TempData["feedback"] = "Product added to Cart Successfully";
+                    _logger.LogInformation("Product added to cart successfully");
                 }
                 
             }
             catch (Exception e)
             {
-                //Log error
-
-                TempData["warning"] = e;
+                _logger.LogError(e.Message);
+                TempData["warning"] = "Error while adding to cart, sorry for the inconvenience!";
+                return RedirectToAction("Error", "Home");
             }
 
             return RedirectToAction("Index", "Products");
@@ -143,11 +147,13 @@ namespace PresentationWebApp.Controllers
             try
             {
                 _ordersService.Checkout(User.Identity.Name);
-                TempData["feedback"] = "Checkout Done";
+                TempData["feedback"] = "Checkout Complete";
             }
             catch(Exception e)
             {
-                TempData["warning"] = e.Message;
+                _logger.LogError(e.Message);
+                TempData["warning"] = "Error with checkout, sorry for the inconvenience!";
+                return RedirectToAction("Error", "Home");
             }
 
             return RedirectToAction("Index", "Products");

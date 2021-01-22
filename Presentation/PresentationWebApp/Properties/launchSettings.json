@@ -2,9 +2,13 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/PresentationWebApp",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "https://localhost:44388/",
-      "sslPort": 44388
+      "sslPort": 0
     }
   },
   "profiles": {

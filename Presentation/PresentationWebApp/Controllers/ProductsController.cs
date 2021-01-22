@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using ShoppingCart.Application.Interfaces;
 using ShoppingCart.Application.ViewModels;
 using X.PagedList;
@@ -16,12 +17,14 @@ namespace PresentationWebApp.Controllers
     {
         private readonly IProductsService _productsService;
         private readonly ICategoriesService _categoriesService;
+        private readonly ILogger<ProductsController> _logger;
         private IHostingEnvironment _env;
 
-        public ProductsController(IProductsService productsService, ICategoriesService categoriesService, IHostingEnvironment env) {
+        public ProductsController(IProductsService productsService, ICategoriesService categoriesService, IHostingEnvironment env, ILogger<ProductsController> logger) {
             _productsService = productsService;
             _categoriesService = categoriesService;
             _env = env;
+            _logger = logger;
         }
 
 
@@ -136,25 +139,34 @@ namespace PresentationWebApp.Controllers
             try
             {
 
-                if (f != null) {
-                    if (f.Length > 0) {
+                if (f != null)
+                {
+                    if (f.Length > 0)
+                    {
                         //F:\School\Level 6 Year 2\Semester 1\Enterprise Programming\First Example\SWD62BEP\Presentation\PresentationWebApp\wwwroot
                         string newFileName = Guid.NewGuid() + System.IO.Path.GetExtension(f.FileName);
                         string newFileNameWithAbsolutePath = _env.WebRootPath + @"\images\" + newFileName;
-                        
-                        using (var stream = System.IO.File.Create(newFileNameWithAbsolutePath)) {
+
+                        using (var stream = System.IO.File.Create(newFileNameWithAbsolutePath))
+                        {
                             f.CopyTo(stream);
                         }
                         data.ImageUrl = @"\images\" + newFileName;
+
+                        _productsService.AddProduct(data);
+                        TempData["feedback"] = "Product was added Successfully";
                     }
                 }
-
-                _productsService.AddProduct(data);
-                TempData["feedback"] = "Product was added Successfully";
+                else {
+                    TempData["warning"] = "Include an image";
+                }
             }
             catch (Exception e) {
                 //Log error
+                _logger.LogError(e.Message);
                 TempData["warning"] = "Product was not added";
+                return RedirectToAction("Error", "Home");
+
             }
 
             //We resend the list of categories since the page will reload
@@ -175,7 +187,9 @@ namespace PresentationWebApp.Controllers
             }
             catch (Exception ex) {
                 //Log your error
-                TempData["warning"] = "Product was not deleted"; //Change from ViewData to TempData
+                TempData["warning"] = "Product was not deleted"; 
+                _logger.LogError(ex.Message);
+                return RedirectToAction("Error", "Home");
             }
 
             return RedirectToAction("Index");
